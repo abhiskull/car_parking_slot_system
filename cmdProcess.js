@@ -12,7 +12,7 @@ var parking = function(callback) {
     })
 };
 
-var allotParking = function(vechicleDetail){
+cmdProcess.allotParking = function(vechicleDetail){
     var searchSlot = _.findIndex(parkingSlot, function(eachSlot){
         return eachSlot == null
     });
@@ -23,14 +23,14 @@ var allotParking = function(vechicleDetail){
     return searchSlot;
 };
 
-var createParkingSlot = function(reqSlots) {
+cmdProcess.createParkingSlot = function(reqSlots) {
     for(var i= 1; i<parseInt(reqSlots)+1; i++){
         parkingSlot.push(null);
     }
-    return;
+    return('Created a parking lot with ' + reqSlots + ' slots');
 }
 
-var leaveParkingSlot = function(leavingSlotNumber){
+cmdProcess.leaveParkingSlot = function(leavingSlotNumber){
     if(parkingSlot[parseInt(leavingSlotNumber)-1] == undefined){
         console.log("Requested slot are not available");
     }else{
@@ -38,7 +38,7 @@ var leaveParkingSlot = function(leavingSlotNumber){
     }
 }
 
-var getStatus = function(){
+cmdProcess.getStatus = function(){
     console.log("Slot" + "   " + "Regestration" + "   " + "Color");
     console.log("--------------------------------");
     var i = 1;
@@ -51,7 +51,7 @@ var getStatus = function(){
     })
 }
 
-var getRegNumberByColor = function(reqColor){
+cmdProcess.getRegNumberByColor = function(reqColor){
     var listOfReg = [];
     _.forEach(parkingSlot, function(eachSlot){
         if(eachSlot.color == reqColor){
@@ -61,7 +61,7 @@ var getRegNumberByColor = function(reqColor){
     return listOfReg;
 }
 
-var getListOfSlotByColor = function(reqColor){
+cmdProcess.getListOfSlotByColor = function(reqColor){
     var listOfSlots = [];
     for(var i = 0; i<parkingSlot.length; i++){
         if(parkingSlot[i].color == reqColor){
@@ -71,7 +71,7 @@ var getListOfSlotByColor = function(reqColor){
     return listOfSlots;
 }
 
-var getSlotNoForReg = function(reqRegNo){
+cmdProcess.getSlotNoForReg = function(reqRegNo){
     var getRegNumber = _.findIndex(parkingSlot, function(eachParkingSlot){
         if(eachParkingSlot != null){
             return eachParkingSlot.regNumber == reqRegNo;
@@ -84,7 +84,7 @@ cmdProcess.processParking = function(cmd, callback){
     var splitInputCMD = cmd.split(" ");
     switch(splitInputCMD[0]) {
         case 'create_parking_lot':
-            createParkingSlot(splitInputCMD[1]);
+            cmdProcess.createParkingSlot(splitInputCMD[1]);
             console.info("Created a parking lot with " + splitInputCMD[1] + " slots");
             parking();
             break;
@@ -92,22 +92,22 @@ cmdProcess.processParking = function(cmd, callback){
             var vechicleDetail = {};
             vechicleDetail.regNumber = splitInputCMD[1];
             vechicleDetail.color = splitInputCMD[2];
-            var slotNumber = allotParking(vechicleDetail);
+            var slotNumber = cmdProcess.allotParking(vechicleDetail);
             slotNumber++;
             console.log("Alloted slot number", slotNumber);
             parking();
             break;
         case 'leave':
-            leaveParkingSlot(splitInputCMD[1])
+            cmdProcess.leaveParkingSlot(splitInputCMD[1])
             console.log("Slot number " + splitInputCMD[1] + " is free");
             parking();
             break;
         case 'status':
-            getStatus();
+            cmdProcess.getStatus();
             parking();
             break;
         case 'registration_numbers_for_cars_with_colour':
-            var listofRegNo = getRegNumberByColor(splitInputCMD[1]);
+            var listofRegNo = cmdProcess.getRegNumberByColor(splitInputCMD[1]);
             if(listofRegNo.length){
                 var strListofReg = listofRegNo.toString();
                 console.log(strListofReg); 
@@ -117,7 +117,7 @@ cmdProcess.processParking = function(cmd, callback){
             parking();
             break;  
         case 'slot_numbers_for_cars_with_colour':
-            var listOfSlot = getListOfSlotByColor(splitInputCMD[1]);
+            var listOfSlot = cmdProcess.getListOfSlotByColor(splitInputCMD[1]);
             if(listOfSlot.length){
                 var strListOfSlot = listOfSlot.toString();
                 console.log(strListOfSlot);
@@ -127,7 +127,7 @@ cmdProcess.processParking = function(cmd, callback){
             parking();
             break;
         case 'slot_number_for_registration_number':
-            var slotNumber = getSlotNoForReg(splitInputCMD[1]);
+            var slotNumber = cmdProcess.getSlotNoForReg(splitInputCMD[1]);
             if(slotNumber == -1){
                 console.log("Not Found");
             }else{
