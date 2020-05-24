@@ -1,5 +1,5 @@
 # car_parking_slot_system
-codeZeros
+Requirement given by codeZeros
 
 Run npm install to install all packages
 
